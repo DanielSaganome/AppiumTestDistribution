@@ -672,10 +672,15 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
     public synchronized DesiredCapabilities iosNative() {
         DesiredCapabilities iOSCapabilities = new DesiredCapabilities();
         System.out.println("Setting iOS Desired Capabilities:");
-        iOSCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "9.0");
+        iOSCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, prop.getProperty("iOS_VERSION"));
         iOSCapabilities.setCapability(MobileCapabilityType.APP, prop.getProperty("IOS_APP_PATH"));
-        iOSCapabilities
-            .setCapability(IOSMobileCapabilityType.BUNDLE_ID, prop.getProperty("BUNDLE_ID"));
+        iOSCapabilities.setCapability(IOSMobileCapabilityType.BUNDLE_ID, prop.getProperty("BUNDLE_ID"));
+        
+        iOSCapabilities.setCapability("autoWebview", "true");
+
+        iOSCapabilities.setCapability("xcodeConfigFile", prop.getProperty("XCODE_CONFIG_FILE"));
+        iOSCapabilities.setCapability("realDeviceLogger", prop.getProperty("REAL_DEVICE_LOGGER"));
+        
         iOSCapabilities.setCapability(IOSMobileCapabilityType.AUTO_ACCEPT_ALERTS, true);
         iOSCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "iPhone");
         iOSCapabilities.setCapability(MobileCapabilityType.UDID, device_udid);
