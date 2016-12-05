@@ -676,7 +676,7 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
         iOSCapabilities.setCapability(MobileCapabilityType.APP, prop.getProperty("IOS_APP_PATH"));
         iOSCapabilities.setCapability(IOSMobileCapabilityType.BUNDLE_ID, prop.getProperty("BUNDLE_ID"));
         
-        iOSCapabilities.setCapability("autoWebview", "true");
+        //iOSCapabilities.setCapability("autoWebview", "true");
 
         iOSCapabilities.setCapability("xcodeConfigFile", prop.getProperty("XCODE_CONFIG_FILE"));
         iOSCapabilities.setCapability("realDeviceLogger", prop.getProperty("REAL_DEVICE_LOGGER"));
