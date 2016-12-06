@@ -1,24 +1,30 @@
 package com.appium.manager;
 
-import com.annotation.values.Author;
-import com.annotation.values.Description;
-import com.annotation.values.SkipIf;
-import com.appium.ios.IOSDeviceConfiguration;
-import com.appium.utils.ImageUtils;
-import com.appium.utils.MobilePlatform;
-import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.Status;
-import com.report.factory.ExtentManager;
-import com.report.factory.ExtentTestManager;
-import com.video.recorder.Flick;
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.remote.AndroidMobileCapabilityType;
-import io.appium.java_client.remote.IOSMobileCapabilityType;
-import io.appium.java_client.remote.MobileCapabilityType;
-import io.appium.java_client.service.local.AppiumServiceBuilder;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+
 import org.apache.commons.io.FileUtils;
 import org.im4java.core.IM4JavaException;
 import org.openqa.selenium.By;
@@ -36,33 +42,26 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
 
+import com.annotation.values.Author;
+import com.annotation.values.Description;
+import com.annotation.values.SkipIf;
+import com.appium.ios.IOSDeviceConfiguration;
+import com.appium.utils.ImageUtils;
+import com.appium.utils.MobilePlatform;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
+import com.report.factory.ExtentManager;
+import com.report.factory.ExtentTestManager;
+import com.video.recorder.Flick;
 
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.remote.AndroidMobileCapabilityType;
+import io.appium.java_client.remote.IOSMobileCapabilityType;
+import io.appium.java_client.remote.MobileCapabilityType;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
 
 
 public class AppiumParallelTest extends TestListenerAdapter implements ITestListener {
@@ -672,14 +671,20 @@ public class AppiumParallelTest extends TestListenerAdapter implements ITestList
     public synchronized DesiredCapabilities iosNative() {
         DesiredCapabilities iOSCapabilities = new DesiredCapabilities();
         System.out.println("Setting iOS Desired Capabilities:");
-        iOSCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, prop.getProperty("iOS_VERSION"));
+        iOSCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, System.getProperty("iOSVersion"));
         iOSCapabilities.setCapability(MobileCapabilityType.APP, prop.getProperty("IOS_APP_PATH"));
         iOSCapabilities.setCapability(IOSMobileCapabilityType.BUNDLE_ID, prop.getProperty("BUNDLE_ID"));
         
         //iOSCapabilities.setCapability("autoWebview", "true");
-
-        iOSCapabilities.setCapability("xcodeConfigFile", prop.getProperty("XCODE_CONFIG_FILE"));
-        iOSCapabilities.setCapability("realDeviceLogger", prop.getProperty("REAL_DEVICE_LOGGER"));
+        
+        try{
+	        if(Integer.parseInt(System.getProperty("iOSVersion")) > 9 ){
+	            iOSCapabilities.setCapability("xcodeConfigFile", prop.getProperty("XCODE_CONFIG_FILE"));
+	            iOSCapabilities.setCapability("realDeviceLogger", prop.getProperty("REAL_DEVICE_LOGGER"));
+	        }
+        }catch(Exception e){
+        	e.printStackTrace();
+        }
         
         iOSCapabilities.setCapability(IOSMobileCapabilityType.AUTO_ACCEPT_ALERTS, true);
         iOSCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "iPhone");
